@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inno- Speech to Text</title>
+
+    <!-- Disable tap highlight on IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Web Application Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Web Starter Kit">
+    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Web Starter Kit">
+    <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
+
+    <!-- Color the status bar on mobile devices -->
+    <meta name="theme-color" content="#2F3BA2">
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <!-- Material Design icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+
+    <!-- Material Design Lite page styles:
+    You can choose other color schemes from the CDN, more info here http://www.getmdl.io/customize/index.html
+    Format: material.color1-color2.min.css, some examples:
+    material.red-teal.min.css
+    material.blue-orange.min.css
+    material.purple-indigo.min.css
+    -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+
+    <!-- Your styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <!--<link rel="stylesheet" href="styles/style.css">-->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap-select.min.css">
+    <!--<link rel="stylesheet" href="../../../../../../Users/grenouille/Downloads/bootstrap-select-1.12.4/dist/css/bootstrap-select.css">-->
+</head>
+<body>
+
+<div class="container" style="background: #4285F4; width: 100%">
+    <div class="row">
+        <div class="col-lg-6" style="background: #c8e5bc">
+            <div class="row">
+                <h3 style="text-align: center">Speech to text</h3>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h4 style="margin-top: -3%">Volume</h4>
+                        </div>
+                        <div class="col-lg-6">
+                            <input id="volume" class="mdl-slider mdl-js-slider" type="range" id="s1" min="0" max="10" value="4" step="2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3"><h4>Langue</h4></div>
+                        <div class="col-lg-9 form-group">
+                            <select id="language" class="form-control">
+                                <option value="fr-FR">Français</option>
+                                <option value="en-US">Anglais</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h4>Ré-écoute</h4>
+                        </div>
+                        <div class="col-lg-9">
+                            <audio id="myaudio" controls></audio>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <header id="spanmicro"
+                                    class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color-text--white">
+                                        <span>
+                                            <svg width="80" height="80" version="1.1"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink" id="recordButton">
+                                                <image id="recordimage" x="0" y="0" width="80" height="80" xlink:href="images/001-muted.svg"></image>
+                                            </svg>
+                                            <canvas class="visualizer" height="30px"></canvas>
+                                        </span>
+                            </header>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6" style="background: #a6e1ec">
+            <div class="row">
+                <h3 style="text-align: center">Analyse de sentiment de texte</h3>
+            </div>
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="form-group">
+                                <textarea style="margin-left: 10%" class="form-control" id="textNLUinput" rows="3"
+                                          placeholder="Entrez le texte à analyser ici..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <button class="btn btn-success" type="button" onclick="showNluAnalyze('texte')" style="margin-top: 17%; margin-left: 20%">Analyser</button>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5 form-group">
+                            <label style="margin-left: 20%" for="texteBrowse">Ou transmettre un fichier</label>
+                            <p id="texteBrowse"></p>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="btn btn-primary">
+                                    Parcourir...<input type="file" id="document" hidden>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <button class="btn btn-success" type="button" onclick="showNluAnalyze('file')" style="margin-top: 0%; margin-left: 30%">Analyser</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="col-lg-3"></div>
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-5">
+                <textarea id="ibmTranscript" cols="70" rows="9"></textarea>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <svg width="120" height="80" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <image x="60" y="0" width="60" height="80" xlink:href="images/ibm-logo.svg"></image>
+                    </svg>
+                </div>
+                <div class="row">
+                    <div id="ibmSpinner" style="visibility: hidden">
+                        <div style="margin-left: 25%">
+                            <div class="mdl-spinner mdl-js-spinner is-active"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-6">
+                        <div id="ibmConfident">
+                            <div id="ibmRatingBloc" class="acidjs-rating-stars acidjs-rating-disabled">
+                                <input type="radio" name="ibm-group" id="ibm-group-5" value="5"/><label for="ibm-group-5"></label>
+                                <input type="radio" name="ibm-group" id="ibm-group-4" value="4"/><label for="ibm-group-4"></label>
+                                <input type="radio" name="ibm-group" id="ibm-group-3" value="3"/><label for="ibm-group-3"></label>
+                                <input type="radio" name="ibm-group" id="ibm-group-2" value="2"/><label for="ibm-group-2"></label>
+                                <input type="radio" name="ibm-group" id="ibm-group-1" value="1"/><label for="ibm-group-1"></label>
+                            </div>
+                            <div id="ibmConfidentValue" style="font-size: small; color: black; font-weight: bold; margin-left: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-9" id="ibmEmotion" style="visibility: hidden;">
+                <div class="col-lg-2">
+                    Vous semblez être &nbsp;
+                </div>
+                <div class="col-lg-6">
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmneutralIcon" style="display: none">
+                        <image id="ibmneutralSvg" x="0" y="0" width="32" height="32" xlink:href="images/neutral.svg"></image>
+                    </svg>
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmjoyIcon" style="display: none">
+                        <image id="ibmjoySvg" x="0" y="0" width="32" height="32" xlink:href="images/joy.svg"></image>
+                    </svg>
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmangerIcon" style="display: none">
+                        <image id="ibmangerSvg" x="0" y="0" width="32" height="32" xlink:href="images/anger.svg"></image>
+                    </svg>
+
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmsadnessIcon" style="display: none">
+                        <image id="ibmsadnessSvg" x="0" y="0" width="32" height="32" xlink:href="images/sadness.svg"></image>
+                    </svg>
+
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmdisgustIcon" style="display: none">
+                        <image id="ibmdisgustSvg" x="0" y="0" width="32" height="32" xlink:href="images/disgust.svg"></image>
+                    </svg>
+
+                    <svg width="32" height="32" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" id="ibmfearIcon" style="display: none">
+                        <image id="ibmfearSvg" x="0" y="0" width="32" height="32" xlink:href="images/fear.svg"></image>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="col-lg-3"></div>
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-5">
+                <textarea id="gcsTranscript" cols="70" rows="9">&nbsp;</textarea>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <svg width="200" height="80" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <image x="30" y="10" width="170" height="80" xlink:href="images/gcp-logo.svg"></image>
+                    </svg>
+                </div>
+                <div class="row">
+                    <div id="gcsSpinner" style="visibility: hidden">
+                        <div style="margin-left: 25%">
+                            <div class="mdl-spinner mdl-js-spinner is-active"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-6">
+                        <div id="gcsConfident">
+                            <div id="gcsRatingBloc" class="acidjs-rating-stars acidjs-rating-disabled">
+                                <input type="radio" name="gcs-group" id="gcs-group-5" value="5"/><label for="gcs-group-5"></label>
+                                <input type="radio" name="gcs-group" id="gcs-group-4" value="4"/><label for="gcs-group-4"></label>
+                                <input type="radio" name="gcs-group" id="gcs-group-3" value="3"/><label for="gcs-group-3"></label>
+                                <input type="radio" name="gcs-group" id="gcs-group-2" value="2"/><label for="gcs-group-2"></label>
+                                <input type="radio" name="gcs-group" id="gcs-group-1" value="1"/><label for="gcs-group-1"></label>
+                            </div>
+                            <div id="gcsConfidentValue" style="font-size: small; color: black; font-weight: bold; margin-left: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-9">
+                <div id="gcsEmotion" style="visibility: hidden;">
+                    <div class="col-lg-2">
+                        Vous semblez être &nbsp;
+                    </div>
+                    <div class="col-lg-6">
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcsneutralIcon" style="display: none">
+                            <image id="gcsneutralSvg" x="0" y="0" width="32" height="32" xlink:href="images/neutral.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcsjoyIcon" style="display: none">
+                            <image id="gcsjoySvg" x="0" y="0" width="32" height="32" xlink:href="images/joy.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcsangerIcon" style="display: none">
+                            <image id="gcsangerSvg" x="0" y="0" width="32" height="32" xlink:href="images/anger.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcssadnessIcon" style="display: none">
+                            <image id="gcssadnessSvg" x="0" y="0" width="32" height="32" xlink:href="images/sadness.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcsdisgustIcon" style="display: none">
+                            <image id="gcsdisgustSvg" x="0" y="0" width="32" height="32" xlink:href="images/disgust.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="gcsfearIcon" style="display: none">
+                            <image id="gcsfearSvg" x="0" y="0" width="32" height="32" xlink:href="images/fear.svg"></image>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="col-lg-3"></div>
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-5">
+                <textarea id="msbTranscript" cols="70" rows="9"></textarea>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <svg width="200" height="80" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <image x="30" y="10" width="170" height="80" xlink:href="images/microsoft-azure.svg"></image>
+                    </svg>
+                </div>
+                <div class="row">
+                    <div id="msbSpinner" style="visibility: hidden">
+                        <div style="margin-left: 25%">
+                            <div class="mdl-spinner mdl-js-spinner is-active"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-6">
+                        <div id="msbConfident">
+                            <div id="msbRatingBloc" class="acidjs-rating-stars acidjs-rating-disabled">
+                                <input type="radio" name="msb-group" id="msb-group-5" value="5"/><label for="msb-group-5"></label>
+                                <input type="radio" name="msb-group" id="msb-group-4" value="4"/><label for="msb-group-4"></label>
+                                <input type="radio" name="msb-group" id="msb-group-3" value="3"/><label for="msb-group-3"></label>
+                                <input type="radio" name="msb-group" id="msb-group-2" value="2"/><label for="msb-group-2"></label>
+                                <input type="radio" name="msb-group" id="msb-group-1" value="1"/><label for="msb-group-1"></label>
+                            </div>
+                            <div id="msbConfidentValue" style="font-size: small; color: black; font-weight: bold; margin-left: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-9">
+                <div id="msbEmotion" style="visibility: hidden;">
+                    <div class="col-lg-2">
+                        Vous semblez être &nbsp;
+                    </div>
+                    <div class="col-lg-6">
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbneutralIcon" style="display: none">
+                            <image id="msbneutralSvg" x="0" y="0" width="32" height="32" xlink:href="images/neutral.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbjoyIcon" style="display: none">
+                            <image id="msbjoySvg" x="0" y="0" width="32" height="32" xlink:href="images/joy.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbangerIcon" style="display: none">
+                            <image id="msbangerSvg" x="0" y="0" width="32" height="32" xlink:href="images/anger.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbsadnessIcon" style="display: none">
+                            <image id="msbsadnessSvg" x="0" y="0" width="32" height="32" xlink:href="images/sadness.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbdisgustIcon" style="display: none">
+                            <image id="msbdisgustSvg" x="0" y="0" width="32" height="32" xlink:href="images/disgust.svg"></image>
+                        </svg>
+
+                        <svg width="32" height="32" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" id="msbfearIcon" style="display: none">
+                            <image id="msbfearSvg" x="0" y="0" width="32" height="32" xlink:href="images/fear.svg"></image>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="javascript/material.min.js"></script>
+<!-- build:js scripts/main.min.js -->
+<script src="scripts/main.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="scripts/dropdown.js"></script>
+<script src="javascript/mediaDevices-getUserMedia-polyfill.js"></script>
+<!-- endbuild -->
+<script src="javascript/recorder.js"></script>
+<script src="javascript/recorderWorker.js"></script>
+<script src="javascript/audioToWav.js"></script>
+<script src="javascript/stot.js"></script>
+
+<!-- Built with love using Web Starter Kit -->
+</body>
+</html>

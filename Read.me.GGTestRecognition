@@ -1,0 +1,26 @@
+Complément de la doc https://cloud.google.com/speech/docs/getting-started#installing_the_google_cloud_sdk
+--------------------------------------
+1)Sélectionner son projet
+2) Activer le service Speech Recognition
+3) Créer un compte de service (paneau de gauche - Comptes de service)
+4) créer une clé privée du compte de service soit en JSON soit en PK12. Sauvegarder la clé.
+5) "Authenticate to your service account, passing the location of your service account key file: gcloud auth activate-service-account --key-file=service-account-key-file
+". Cette opération doit être faite avec le terminal de l'API Console, car gcloud est une commande GG --> Click sur l'icone > dans la barre de menu en haut à droite.
+      5.1) créer un espace pour partager les fichiers entre le poste de travail et l'API Console aller dans GG Cloud Stockage (paneau de gauche)
+            et créer un bucket. Attention les noms de bucket doit être en minuscle
+      5.2) Upload le fichier de clé depuis le poste de travail vers le bucket
+      5.3) Copier le fichier depuis le bucket : Activer le terminal de GG dans l'API Console : gsutil cp "gs://p<nom-bucket>/<nom-fichier-clé>" .
+      5.4) Dans le terminal GG taper la commande gcloud auth activate-service-account --key-file=<nom-fichier-clé>
+ 6) "Obtain an authorization token using your service account: gcloud auth application-default print-access-token"
+      6.1) Dans le terminal GG : export GOOGLE_APPLICATION_CREDENTIALS="nom-fichier-clé" --> Sans cette instruction, le token généré est faux.
+      6.2) Dans le terminal GG : gcloud auth application-default print-access-token
+      6.3) Copier le token affiché.
+ 7) Dans le terminal du poste de travail ou celui de GG :
+ curl -s -H "Content-Type: application/json" \
+     -H "Authorization: Bearer <Le token copié>" \
+     https://speech.googleapis.com/v1/speech:recognize \
+     -d @<le fichier JSON de configuration>
+
+
+
+
